@@ -15,14 +15,17 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         # self.request is the TCP socket connected to the client
-        self.data = self.request.recv(1024).strip()
-        print("{} wrote:".format(self.client_address[0]))
-        print(self.data)
+        while True:
+            self.data = self.request.recv(1024).strip()
+            print("{} wrote:".format(self.client_address[0]))
+            print(self.data)
 
-        result = "\n"
-        if self.data.upper() == b"HELLO":
-            result = "world\n"
-        self.request.sendall(bytes(result, "utf-8"))
+            result = "\n"
+            if self.data == b"hello":
+                result = "world\n"
+                self.request.sendall(bytes(result, "utf-8"))
+            if self.data ==b"end":
+                break
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 9999
