@@ -11,3 +11,11 @@
 
 - Ursache: String-Vergleich falsch implementiert
 - Lösung: "hello" zu b"hello" ändern
+
+### Problem: Nach "hello" wird die Verbindung zum Server geschlossen
+
+- Lösung: Eine while-Schleife verwenden
+
+### Problem: Wie implementiert und testet man TLS?
+
+- Lösung:
