@@ -1,6 +1,7 @@
 import socketserver
 import ssl
 
+
 class MyTCPHandler(socketserver.BaseRequestHandler):
     """
     The request handler class for our server.
@@ -21,10 +22,11 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
             if self.data == b"hello":
                 result = "world\n"
                 self.request.sendall(bytes(result, "utf-8"))
-            if self.data ==b"end":
+            if self.data == b"end":
                 break
-            if self.data ==b"":
+            if self.data == b"":
                 break
+
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 9999
