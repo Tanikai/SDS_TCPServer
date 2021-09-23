@@ -14,18 +14,18 @@
 
 ### Problem: Nach "hello" wird die Verbindung zum Server geschlossen
 
-- Lösung: Eine while-Schleife verwenden
+- Lösung: Eine while-Schleife im Handler verwenden
 
 ### Problem: Wie implementiert man überhaupt das TLS?
 
-- Erstmal ein Zertifikat erstellen: [Lets Encrypt](https://letsencrypt.org/docs/certificates-for-localhost/)
-- Mithilfe der ssl-Library wrap_socket verwenden
-
-Zweite Lösung:
+\(Erstmal ein Zertifikat erstellen: [Lets Encrypt](https://letsencrypt.org/docs/certificates-for-localhost/)\)
 
 - Minica klonen und bauen: [MiniCA github repo](https://github.com/jsha/minica)
 - (Development) Zertifikat für localhost ausstellen lassen
 - CA ist minica.pem
+- Mit der ssl-Library folgende Sachen machen:
+  - SSL-Kontext erstellen und Public/Private Key von MiniCA laden
+  - Den Socket von ForkingTCPServer mithilfe des SSL-Kontextes wrappen
 
 ### Problem: Wie testet man die TLS-Verbindung?
 
