@@ -29,10 +29,10 @@
 
 ### Problem: Wie testet man die TLS-Verbindung?
 
-- Lösung: openssl s_client -verify_return_error -connect localhost:8080
+- Lösung: openssl s_client -verify_return_error -connect localhost:9999
 
 ### Problem: Fehlermeldung "unable to verify the first certificate"
 
-- Ursache: self-signed Zertifikat, welches von keiner CA unterschrieben wurde
-- Lösung: Public Key des Servers mit angeben: openssl s_client -verify_return_error -connect localhost:8080 -CAfile minica.pem
+- Ursache: self-signed Zertifikat, welches von keiner (bekannten) CA unterschrieben wurde
+- Lösung: Public Key des Servers mit angeben: openssl s_client -verify_return_error -connect localhost:9999 -CAfile minica.pem
 - Bei der Lets Encrypt-Methode gabs keine CA, also mit MiniCA gemacht
