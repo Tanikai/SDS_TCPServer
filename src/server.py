@@ -30,11 +30,11 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
                 break
 
 class MyTCPServer(socketserver.ForkingTCPServer):
-    def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
+    def __init__(self, server_address, cert, RequestHandlerClass, bind_and_activate=True):
         super(MyTCPServer, self).__init__(server_address, RequestHandlerClass, False)
         # socketserver.ForkingTCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate=True)
         self.context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-        self.context.load_cert_chain(PUBLIC_KEY_PATH, PRIVATE_KEY_PATH)
+        self.context.load_cert_chain(cert[0], cert[1])
 
         self.socket = self.context.wrap_socket(self.socket, server_side=True)
         if bind_and_activate:
@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
     # Create the server, binding to localhost on port 9999
     # False: bind_and_activate
-    with MyTCPServer((HOST, PORT), MyTCPHandler, True) as server:
+    with MyTCPServer((HOST, PORT), (PUBLIC_KEY_PATH, PRIVATE_KEY_PATH), MyTCPHandler, True) as server:
         # Activate the server; this will keep running until you
         # interrupt the program with Ctrl-C
         print("starting server")
