@@ -23,10 +23,23 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
                 result = "world\n"
                 self.request.sendall(bytes(result, "utf-8"))
             if self.data == b"end":
+                print("\nConnection closed\n")
                 break
             if self.data == b"":
+                print("\nConnection closed\n")
                 break
 
+class MyTCPServer(socketserver.ForkingTCPServer):
+    def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
+        super(MyTCPServer, self).__init__(server_address, RequestHandlerClass, False)
+        # socketserver.ForkingTCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate=True)
+        self.context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        self.context.load_cert_chain(PUBLIC_KEY_PATH, PRIVATE_KEY_PATH)
+
+        self.socket = self.context.wrap_socket(self.socket, server_side=True)
+        if bind_and_activate:
+            self.server_bind()
+            self.server_activate()
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 9999
@@ -35,15 +48,9 @@ if __name__ == "__main__":
 
     # Create the server, binding to localhost on port 9999
     # False: bind_and_activate
-    with socketserver.ForkingTCPServer((HOST, PORT), MyTCPHandler, False) as server:
+    with MyTCPServer((HOST, PORT), MyTCPHandler, True) as server:
         # Activate the server; this will keep running until you
         # interrupt the program with Ctrl-C
-        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-        context.load_cert_chain(PUBLIC_KEY_PATH, PRIVATE_KEY_PATH)
-
-        server.socket = context.wrap_socket(server.socket, server_side=True)
-        server.server_bind()
-        server.server_activate()
         print("starting server")
         try:
             server.serve_forever()
